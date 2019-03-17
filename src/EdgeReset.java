@@ -1,6 +1,6 @@
 public class EdgeReset extends Edge {
 
-    public EdgeReset(Place place, Transition transition, int weight) {
-        super(place, transition, weight);
+    public EdgeReset(Place place, Transition transition, String source) throws IllegalArgumentException {
+        super(place, transition, source);
     }
 }

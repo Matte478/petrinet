@@ -4,7 +4,7 @@ public class Transition {
     private long id;
     private final String name;
     private Vector<Edge> inputEdges = new Vector<>();
-    private Vector<Edge> outputEdges = new Vector<>();
+    private Vector<EdgeNormal> outputEdges = new Vector<>();
 
     public Transition(long id, String name) {
         this.id = id;
@@ -27,7 +27,7 @@ public class Transition {
         return inputEdges;
     }
 
-    public Vector<Edge> getOutputEdges() {
+    public Vector<EdgeNormal> getOutputEdges() {
         return outputEdges;
     }
 
@@ -35,18 +35,31 @@ public class Transition {
         this.inputEdges.add(inputEdge);
     }
 
-    public void addOutputEdge(Edge outputEdge) {
+    public void addOutputEdge(EdgeNormal outputEdge) {
         this.outputEdges.add(outputEdge);
     }
 
     public void start() {
         if(canStart()) {
             for (Edge edge : inputEdges) {
-                int token = edge.getPlace().getToken() - edge.getWeight();
-                edge.getPlace().setToken(token);
+
+                // input edge can be normal or reset edge
+                // so I check if edge is instance of EdgeNormal or EdgeReset
+                if (edge instanceof EdgeNormal) {
+                    EdgeNormal edgeNormal = (EdgeNormal) edge;
+                    int token = edgeNormal.getPlace().getToken() - edgeNormal.getWeight();
+                    edgeNormal.getPlace().setToken(token);
+                } else if (edge instanceof EdgeReset) {
+                    edge.getPlace().setToken(0);
+                }
             }
-            for (Edge edge : outputEdges) {
+
+            // output edge can be only instance of EdgeNormal
+            // I cannot have reset edge from transition to place
+            for (EdgeNormal edge : outputEdges) {
                 int token = edge.getPlace().getToken() + edge.getWeight();
+                System.out.println(edge.getPlace().getToken());
+                System.out.println(edge.getWeight());
                 edge.getPlace().setToken(token);
             }
         } else {
@@ -56,10 +69,14 @@ public class Transition {
 
     private boolean canStart() {
         for (Edge edge : inputEdges) {
-            if (edge.getWeight() > edge.getPlace().getToken()) {
-                return false;
+            if (edge instanceof EdgeNormal) {
+                EdgeNormal edgeNormal = (EdgeNormal) edge;
+                if (edgeNormal.getWeight() > edgeNormal.getPlace().getToken()) {
+                    return false;
+                }
             }
         }
+
         return true;
     }
 }
