@@ -4,19 +4,31 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Place place1 = new Place(1, "place1", 15);
-        Transition transition1 = new Transition(1, "transition1");
+        Petrinet petrinet = new Petrinet();
 
-        Edge edge1 = new EdgeNormal(place1, transition1, "transition", 5);
-//        Edge edge2 = new EdgeNormal(place1, transition1, "place", 10);
-//        Edge edge3 = new EdgeNormal(place1, transition1, "transition", 1);
-        Edge edge3 = new EdgeReset(place1, transition1, "place");
+        petrinet.addPlace("p1", 0); // 0
+        petrinet.addPlace("p2", 0); // 1
 
-        transition1.start();
+        petrinet.addTransition("t1"); // 2
+        petrinet.addTransition("t2"); // 3
+        petrinet.addTransition("t3"); // 4
 
-        System.out.println(place1.getToken());
+        petrinet.addEdgeNormal(3, 0, 5);
 
 
+//        Place place = petrinet.getPlaceById(0);
+////        String name = place.getName();
+////        System.out.println(name);
+////
+////        Transition transition = petrinet.getTransitionById(0);
+////        String name1 = transition.getName();
+////        System.out.println(name1);
+
+        petrinet.print();
+
+        petrinet.launchTransition(3);
+
+        petrinet.print();
 
     }
 }

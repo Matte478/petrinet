@@ -1,26 +1,11 @@
 import java.util.Vector;
 
-public class Transition {
-    private long id;
-    private final String name;
+public class Transition extends Point {
     private Vector<Edge> inputEdges = new Vector<>();
     private Vector<EdgeNormal> outputEdges = new Vector<>();
 
     public Transition(long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
+        super(id, name);
     }
 
     public Vector<Edge> getInputEdges() {
@@ -58,8 +43,6 @@ public class Transition {
             // I cannot have reset edge from transition to place
             for (EdgeNormal edge : outputEdges) {
                 int token = edge.getPlace().getToken() + edge.getWeight();
-                System.out.println(edge.getPlace().getToken());
-                System.out.println(edge.getWeight());
                 edge.getPlace().setToken(token);
             }
         } else {

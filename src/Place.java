@@ -1,28 +1,18 @@
-public class Place {
-    private long id;
-    private final String name;
+public class Place extends Point {
     private int token;
 
-    public Place(long id, String name, int token) {
-        this.id = id;
-        this.name = name;
-        this.token = token;
-    }
+    public Place(long id, String name, int token) throws IllegalArgumentException {
+        super(id, name);
 
-    public void setId(long id) {
-        this.id = id;
+        if (token < 0) {
+            throw new IllegalArgumentException("Illegal number of tokens!");
+        } else {
+            this.token = token;
+        }
     }
 
     public void setToken(int token) {
         this.token = token;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public int getToken() {
