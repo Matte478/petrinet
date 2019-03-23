@@ -1,8 +1,11 @@
-public abstract class Point {
+public abstract class Vertex {
     private final long id;
     private final String name;
 
-    public Point(long id, String name) {
+    public Vertex(long id, String name) {
+        if(name == null || name.length() < 1) {
+            throw new IllegalArgumentException("Name must be string of length > 0!");
+        }
         this.id = id;
         this.name = name;
     }

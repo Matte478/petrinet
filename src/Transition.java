@@ -1,6 +1,6 @@
 import java.util.Vector;
 
-public class Transition extends Point {
+public class Transition extends Vertex {
     private Vector<Edge> inputEdges = new Vector<>();
     private Vector<EdgeNormal> outputEdges = new Vector<>();
 
@@ -20,13 +20,19 @@ public class Transition extends Point {
         this.inputEdges.add(inputEdge);
     }
 
-    public void addOutputEdge(EdgeNormal outputEdge) {
-        this.outputEdges.add(outputEdge);
+    public void addOutputEdge(Edge outputEdge) throws IllegalVertexException {
+        if (outputEdge instanceof EdgeReset) {
+            throw new IllegalVertexException("Reset edge can be only from place to transition!");
+        }
+        else if (outputEdge instanceof EdgeNormal) {
+            this.outputEdges.add((EdgeNormal) outputEdge);
+        }
     }
 
-    public void start() {
-        if(canStart()) {
-            for (Edge edge : inputEdges) {
+    public void launch() {
+
+        if(canLaunch()) {
+            for (Edge edge : this.inputEdges) {
 
                 // input edge can be normal or reset edge
                 // so I check if edge is instance of EdgeNormal or EdgeReset
@@ -46,12 +52,13 @@ public class Transition extends Point {
                 edge.getPlace().setToken(token);
             }
         } else {
-            System.out.println("You cannot start this transition!");
+            System.out.println("You cannot launch this transition!");
         }
     }
 
-    private boolean canStart() {
-        for (Edge edge : inputEdges) {
+    private boolean canLaunch() {
+
+        for (Edge edge : this.inputEdges) {
             if (edge instanceof EdgeNormal) {
                 EdgeNormal edgeNormal = (EdgeNormal) edge;
                 if (edgeNormal.getWeight() > edgeNormal.getPlace().getToken()) {
@@ -61,5 +68,10 @@ public class Transition extends Point {
         }
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Transition ID: " + this.getId() + ", name: " + this.getName();
     }
 }

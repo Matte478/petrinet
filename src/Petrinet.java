@@ -6,6 +6,7 @@ public class Petrinet {
     private Vector<Edge> edges = new Vector<>();
     private long counterId = 0;
 
+
     public void addPlace(String name, int token) {
         try {
             Place place = new Place(this.counterId, name, token);
@@ -26,33 +27,90 @@ public class Petrinet {
         }
     }
 
+    /**
+     * if edge from source to destination exists => increments weight of existing edge
+     * else creates new edge
+     */
     public void addEdgeNormal(long fromId, long toId, int weight) {
-        Point from = getPointById(fromId);
-        Point to = getPointById(toId);
+        Vertex from = getVertexById(fromId);
+        Vertex to = getVertexById(toId);
 
         if (from != null && to != null) {
-            try {
-                EdgeNormal edge = new EdgeNormal(from, to, weight);
-                this.edges.add(edge);
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+            Edge edge = getEdgeBetweenVertex(from, to);
+
+            // this edge doesn't exists => I create new
+            if (!(edge instanceof EdgeNormal)) {
+                try {
+                    EdgeNormal edgeNew = new EdgeNormal(from, to, weight);
+                    this.edges.add(edgeNew);
+                }
+                catch (IllegalVertexException | IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                }
             }
-        } else {
+            // this edge exists => I change only weight
+            else {
+                ((EdgeNormal) edge).incrementWeight(weight);
+            }
+        }
+        else {
+            System.out.println("Place or transition with this index doesn't exist");
+        }
+    }
+
+    public void addEdgeReset(long fromId, long toId) {
+        Vertex from = getVertexById(fromId);
+        Vertex to = getVertexById(toId);
+
+        if (from != null && to != null) try {
+            EdgeReset edge = new EdgeReset(from, to);
+            this.edges.add(edge);
+        } catch (IllegalVertexException | IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+        else {
             System.out.println("Place or transition with this index doesn't exist");
         }
     }
 
     public void launchTransition(long id) {
         Transition transition = getTransitionById(id);
+
         if(transition != null) {
-            transition.start();
+            transition.launch();
         } else {
-            System.out.println("Transition with this index doesn't exist");
+            System.out.println("Transition with this index doesn't exist!");
         }
     }
 
-    public Place getPlaceById(long id) {
-//        places.forEach((n) -> id == n.getId() ?? return n : ''; );
+    public void print() {
+        printPlaces();
+        printTransitions();
+        printEdges();
+    }
+
+    public void printPlaces() {
+        System.out.println("Places:");
+        for (Place place : places) {
+            System.out.println(place);
+        }
+    }
+
+    public void printTransitions() {
+        System.out.println("Transitions:");
+        for (Transition transition : transitions) {
+            System.out.println(transition);
+        }
+    }
+
+    public void printEdges() {
+        System.out.println("Edges:");
+        for (Edge edge : edges) {
+            System.out.println(edge);
+        }
+    }
+
+    private Place getPlaceById(long id) {
         for (Place place : places) {
             if (place.getId() == id) {
                 return place;
@@ -62,8 +120,7 @@ public class Petrinet {
         return null;
     }
 
-    public Transition getTransitionById(long id) {
-//        places.forEach((n) -> id == n.getId() ?? return n : ''; );
+    private Transition getTransitionById(long id) {
         for (Transition transition : transitions) {
             if (transition.getId() == id) {
                 return transition;
@@ -73,7 +130,7 @@ public class Petrinet {
         return null;
     }
 
-    private Point getPointById(long id) {
+    private Vertex getVertexById(long id) {
         Place place = getPlaceById(id);
         if (place != null) {
             return place;
@@ -87,20 +144,13 @@ public class Petrinet {
         return null;
     }
 
-    public void print() {
-        System.out.println("Places:");
-        for (Place place : places) {
-            System.out.println("ID: " + place.getId() + " name: " + place.getName() + " token: " + place.getToken());
-        }
-
-        System.out.println("Transitions:");
-        for (Transition transition : transitions) {
-            System.out.println("ID: " + transition.getId() + " name: " + transition.getName());
-        }
-
-        System.out.println("Edges:");
+    private Edge getEdgeBetweenVertex(Vertex from, Vertex to) {
         for (Edge edge : edges) {
-            System.out.println("Place ID: " + edge.getPlace().getId() + " transition ID: " + edge.getTransition().getId());
+            if (edge.getFrom() == from && edge.getTo() == to) {
+                return edge;
+            }
         }
+
+        return null;
     }
 }

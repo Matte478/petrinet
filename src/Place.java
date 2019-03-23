@@ -1,4 +1,4 @@
-public class Place extends Point {
+public class Place extends Vertex {
     private int token;
 
     public Place(long id, String name, int token) throws IllegalArgumentException {
@@ -6,9 +6,8 @@ public class Place extends Point {
 
         if (token < 0) {
             throw new IllegalArgumentException("Illegal number of tokens!");
-        } else {
-            this.token = token;
         }
+        this.token = token;
     }
 
     public void setToken(int token) {
@@ -17,5 +16,10 @@ public class Place extends Point {
 
     public int getToken() {
         return token;
+    }
+
+    @Override
+    public String toString() {
+        return "Place ID: " + this.getId() + ", name: " + this.getName() + ", token: " + this.getToken();
     }
 }
