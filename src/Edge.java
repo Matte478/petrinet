@@ -53,6 +53,6 @@ public abstract class Edge {
         return this.getFrom().getName() + "--->" + this.getTo().getName();
     }
 
-    public abstract void launch();
-    public abstract boolean canLaunch();
+    public abstract void transfer();
+    public abstract boolean canTransfer();
 }

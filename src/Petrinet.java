@@ -36,19 +36,19 @@ public class Petrinet {
         Vertex to = getVertexById(toId);
 
         if (from != null && to != null) {
-            Edge edge = getEdgeBetweenVertex(from, to);
+            EdgeNormal edge = getEdgeNormalBetweenVertex(from, to);
 
             // this edge doesn't exists => I create new
-            if (!(edge instanceof EdgeNormal)) {
+            if (edge == null) {
                 createEdgeNormal(from, to, weight);
             }
             // this edge exists => I change only weight
             else {
-                ((EdgeNormal) edge).incrementWeight(weight);
+                edge.incrementWeight(weight);
             }
         }
         else {
-            System.out.println("\nPlace or transition with this index doesn't exist\n");
+            System.out.println("\nPlace or transition with this index doesn't exist!\n");
         }
     }
 
@@ -89,7 +89,7 @@ public class Petrinet {
         if(transition != null) {
             transition.launch();
         } else {
-            System.out.println("Transition with this index doesn't exist!");
+            System.out.println("\nTransition with this index doesn't exist!\n");
         }
     }
 
@@ -154,10 +154,23 @@ public class Petrinet {
         return null;
     }
 
-    private Edge getEdgeBetweenVertex(Vertex from, Vertex to) {
+    private EdgeNormal getEdgeNormalBetweenVertex(Vertex from, Vertex to) {
+        return (EdgeNormal) getEdgeBetweenVertex(from, to, 0);
+    }
+
+    private EdgeReset getEdgeResetBetweenVertex(Vertex from, Vertex to) {
+        return (EdgeReset) getEdgeBetweenVertex(from, to, 1);
+    }
+
+    private Edge getEdgeBetweenVertex(Vertex from, Vertex to, int type) {
         for (Edge edge : edges) {
             if (edge.getFrom() == from && edge.getTo() == to) {
-                return edge;
+                if (type == 0 && edge instanceof EdgeNormal) {
+                    return edge;
+                }
+                else if (type == 1 && edge instanceof EdgeReset) {
+                    return edge;
+                }
             }
         }
 

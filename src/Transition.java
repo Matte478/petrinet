@@ -31,20 +31,41 @@ public class Transition extends Vertex {
 
     public void launch() {
         if(canLaunch()) {
-            for (Edge edge : this.inputEdges) {
-                edge.launch();
+            Vector<Edge> normal = new Vector<>();
+            Vector<Edge> reset = new Vector<>();
+
+            filterEdges(normal, reset, this.inputEdges);
+
+            for (Edge edge : normal) {
+                edge.transfer();
             }
+
+            for (Edge edge : reset) {
+                edge.transfer();
+            }
+
             for (EdgeNormal edge : outputEdges) {
-                edge.launch();
+                edge.transfer();
             }
         } else {
             System.out.println("\nYou cannot launch this transition!\n");
         }
     }
 
+    private void filterEdges(Vector<Edge> normal, Vector<Edge> reset,  Vector<Edge> edges) {
+        for (Edge edge : edges) {
+            if (edge instanceof EdgeNormal) {
+                normal.add(edge);
+            } else if (edge instanceof EdgeReset) {
+                reset.add(edge);
+            }
+        }
+    }
+
     private boolean canLaunch() {
         for (Edge edge : this.inputEdges) {
-            if (!edge.canLaunch()) {
+
+            if (!edge.canTransfer()) {
                 return false;
             }
         }

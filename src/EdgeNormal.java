@@ -24,7 +24,7 @@ public class EdgeNormal extends Edge {
     }
 
     @Override
-    public void launch() {
+    public void transfer() {
         if (this.getFrom() instanceof Place && this.getTo() instanceof Transition) {
             int token = this.getPlace().getToken() - this.getWeight();
             this.getPlace().setToken(token);
@@ -35,7 +35,7 @@ public class EdgeNormal extends Edge {
     }
 
     @Override
-    public boolean canLaunch() {
+    public boolean canTransfer() {
         return ( this.getPlace().getToken() >= this.getWeight() );
     }
 

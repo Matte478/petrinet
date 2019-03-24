@@ -9,12 +9,12 @@ public class EdgeReset extends Edge {
     }
 
     @Override
-    public void launch() {
+    public void transfer() {
         this.getPlace().setToken(0);
     }
 
     @Override
-    public boolean canLaunch() {
+    public boolean canTransfer() {
         return true;
     }
 
