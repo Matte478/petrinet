@@ -7,7 +7,7 @@ public class EdgeNormal extends Edge {
         if ( weight >= 1 ) {
             this.weight = weight;
         } else {
-            throw new IllegalArgumentException("Weight must be > 0!");
+            throw new IllegalArgumentException("\nWeight must be > 0!\n");
         }
     }
 
@@ -17,10 +17,26 @@ public class EdgeNormal extends Edge {
 
     public void incrementWeight(int weight) throws IllegalArgumentException {
         if(weight < 1) {
-            throw new IllegalArgumentException("Weight must be > 0!");
+            throw new IllegalArgumentException("\nWeight must be > 0!\n");
         }
 
         this.weight+=weight;
+    }
+
+    @Override
+    public void launch() {
+        if (this.getFrom() instanceof Place && this.getTo() instanceof Transition) {
+            int token = this.getPlace().getToken() - this.getWeight();
+            this.getPlace().setToken(token);
+        } else {
+            int token = this.getPlace().getToken() + this.getWeight();
+            this.getPlace().setToken(token);
+        }
+    }
+
+    @Override
+    public boolean canLaunch() {
+        return ( this.getPlace().getToken() >= this.getWeight() );
     }
 
     @Override

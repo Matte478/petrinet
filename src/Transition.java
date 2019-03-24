@@ -22,7 +22,7 @@ public class Transition extends Vertex {
 
     public void addOutputEdge(Edge outputEdge) throws IllegalVertexException {
         if (outputEdge instanceof EdgeReset) {
-            throw new IllegalVertexException("Reset edge can be only from place to transition!");
+            throw new IllegalVertexException("\nReset edge can be only from place to transition!\n");
         }
         else if (outputEdge instanceof EdgeNormal) {
             this.outputEdges.add((EdgeNormal) outputEdge);
@@ -30,40 +30,22 @@ public class Transition extends Vertex {
     }
 
     public void launch() {
-
         if(canLaunch()) {
             for (Edge edge : this.inputEdges) {
-
-                // input edge can be normal or reset edge
-                // so I check if edge is instance of EdgeNormal or EdgeReset
-                if (edge instanceof EdgeNormal) {
-                    EdgeNormal edgeNormal = (EdgeNormal) edge;
-                    int token = edgeNormal.getPlace().getToken() - edgeNormal.getWeight();
-                    edgeNormal.getPlace().setToken(token);
-                } else if (edge instanceof EdgeReset) {
-                    edge.getPlace().setToken(0);
-                }
+                edge.launch();
             }
-
-            // output edge can be only instance of EdgeNormal
-            // I cannot have reset edge from transition to place
             for (EdgeNormal edge : outputEdges) {
-                int token = edge.getPlace().getToken() + edge.getWeight();
-                edge.getPlace().setToken(token);
+                edge.launch();
             }
         } else {
-            System.out.println("You cannot launch this transition!");
+            System.out.println("\nYou cannot launch this transition!\n");
         }
     }
 
     private boolean canLaunch() {
-
         for (Edge edge : this.inputEdges) {
-            if (edge instanceof EdgeNormal) {
-                EdgeNormal edgeNormal = (EdgeNormal) edge;
-                if (edgeNormal.getWeight() > edgeNormal.getPlace().getToken()) {
-                    return false;
-                }
+            if (!edge.canLaunch()) {
+                return false;
             }
         }
 

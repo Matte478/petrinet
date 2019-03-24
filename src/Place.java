@@ -5,7 +5,7 @@ public class Place extends Vertex {
         super(id, name);
 
         if (token < 0) {
-            throw new IllegalArgumentException("Illegal number of tokens!");
+            throw new IllegalArgumentException("\nIllegal number of tokens!\n");
         }
         this.token = token;
     }

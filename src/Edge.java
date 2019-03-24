@@ -20,7 +20,7 @@ public abstract class Edge {
         }
 
         else {
-            throw new IllegalVertexException("Edge can be only from place to transition or vice versa!");
+            throw new IllegalVertexException("\nEdge can be only from place to transition or vice versa!\n");
         }
     }
 
@@ -52,4 +52,7 @@ public abstract class Edge {
     public String toString() {
         return this.getFrom().getName() + "--->" + this.getTo().getName();
     }
+
+    public abstract void launch();
+    public abstract boolean canLaunch();
 }

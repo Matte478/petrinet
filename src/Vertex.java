@@ -4,7 +4,7 @@ public abstract class Vertex {
 
     public Vertex(long id, String name) {
         if(name == null || name.length() < 1) {
-            throw new IllegalArgumentException("Name must be string of length > 0!");
+            throw new IllegalArgumentException("\nName must be string of length > 0!\n");
         }
         this.id = id;
         this.name = name;

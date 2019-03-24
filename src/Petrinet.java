@@ -40,13 +40,7 @@ public class Petrinet {
 
             // this edge doesn't exists => I create new
             if (!(edge instanceof EdgeNormal)) {
-                try {
-                    EdgeNormal edgeNew = new EdgeNormal(from, to, weight);
-                    this.edges.add(edgeNew);
-                }
-                catch (IllegalVertexException | IllegalArgumentException e) {
-                    System.out.println(e.getMessage());
-                }
+                createEdgeNormal(from, to, weight);
             }
             // this edge exists => I change only weight
             else {
@@ -54,7 +48,17 @@ public class Petrinet {
             }
         }
         else {
-            System.out.println("Place or transition with this index doesn't exist");
+            System.out.println("\nPlace or transition with this index doesn't exist\n");
+        }
+    }
+
+    private void createEdgeNormal(Vertex from, Vertex to, int weight) {
+        try {
+            EdgeNormal edgeNew = new EdgeNormal(from, to, weight);
+            this.edges.add(edgeNew);
+        }
+        catch (IllegalVertexException | IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -62,14 +66,20 @@ public class Petrinet {
         Vertex from = getVertexById(fromId);
         Vertex to = getVertexById(toId);
 
-        if (from != null && to != null) try {
+        if (from != null && to != null) {
+            createEdgeReset(from, to);
+        }
+        else {
+            System.out.println("\nPlace or transition with this index doesn't exist!\n");
+        }
+    }
+
+    private void createEdgeReset(Vertex from, Vertex to) {
+        try {
             EdgeReset edge = new EdgeReset(from, to);
             this.edges.add(edge);
         } catch (IllegalVertexException | IllegalArgumentException e) {
             System.out.println(e.getMessage());
-        }
-        else {
-            System.out.println("Place or transition with this index doesn't exist");
         }
     }
 
