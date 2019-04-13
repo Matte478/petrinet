@@ -1,4 +1,6 @@
 import generated.Document;
+import generated.PetrinetTransformer;
+import petrinet.Petrinet;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -14,6 +16,9 @@ public class Main {
             Unmarshaller unmarshaller = context.createUnmarshaller();
 
             Document document = (Document) unmarshaller.unmarshal(resource);
+
+            PetrinetTransformer transformer = new PetrinetTransformer();
+            Petrinet petrinet = transformer.transform(document);
 
             System.out.println("Number of places:" + document.getPlace().size());
             System.out.println("Number of tranistions:" + document.getTransition().size());
