@@ -10,11 +10,25 @@ public class PetrinetTransformer extends Transformer<Petrinet> {
         Petrinet petrinet = new Petrinet();
 
         List<Place> places = document.getPlace();
+        List<Transition> transitions = document.getTransition();
+        List<Arc> arcs = document.getArc();
 
         for (Place place : places) {
-            System.out.println(place.id);
+            petrinet.addPlace(place.getLabel(), place.getTokens(), place.getId());
         }
 
-        return null;
+        for(Transition transition : transitions) {
+            petrinet.addTransition(transition.getLabel(), transition.getId());
+        }
+
+        for (Arc arc : arcs) {
+            if(arc.getType().value().equals("regular")) {
+                petrinet.addEdgeNormal(arc.getSourceId(), arc.getDestinationId(), arc.getMultiplicity());
+            } else if (arc.getType().value().equals("reset")) {
+                petrinet.addEdgeReset(arc.getSourceId(), arc.getDestinationId());
+            }
+        }
+
+        return petrinet;
     }
 }

@@ -6,24 +6,22 @@ public class Petrinet {
     private Vector<Place> places = new Vector<Place>();
     private Vector<Transition> transitions = new Vector<Transition>();
     private Vector<Edge> edges = new Vector<Edge>();
-    private long counterId = 0;
+//    private long counterId = 0;
 
 
-    public void addPlace(String name, int token) {
+    public void addPlace(String name, int token, int id) {
         try {
-            Place place = new Place(this.counterId, name, token);
+            Place place = new Place(id, name, token);
             this.places.add(place);
-            this.counterId++;
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public void addTransition(String name) {
+    public void addTransition(String name, int id) {
         try {
-            Transition transition = new Transition(this.counterId, name);
+            Transition transition = new Transition(id, name);
             this.transitions.add(transition);
-            this.counterId++;
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }

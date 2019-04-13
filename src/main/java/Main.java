@@ -19,7 +19,7 @@ public class Main {
 
             PetrinetTransformer transformer = new PetrinetTransformer();
             Petrinet petrinet = transformer.transform(document);
-
+            petrinet.print();
             System.out.println("Number of places:" + document.getPlace().size());
             System.out.println("Number of tranistions:" + document.getTransition().size());
             System.out.println("Number of arcs:" + document.getArc().size());
