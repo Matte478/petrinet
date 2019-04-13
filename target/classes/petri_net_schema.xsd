@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="xs3p.xsl"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           version="1.1.0">
+    <!-- ===== DOCUMENT ELEMENTS ===== -->
+    <xs:element name="transition">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="id"/>
+                <xs:element ref="x"/>
+                <xs:element ref="y"/>
+                <xs:element ref="label"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="place">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="id"/>
+                <xs:element ref="x"/>
+                <xs:element ref="y"/>
+                <xs:element ref="label"/>
+                <xs:element ref="tokens"/>
+                <xs:choice>
+                    <xs:element ref="isStatic"/>
+                    <xs:element ref="static"/>
+                </xs:choice>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="arc">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="id"/>
+                <xs:element name="type" type="arc_type" default="regular"/>
+                <xs:element ref="sourceId"/>
+                <xs:element ref="destinationId"/>
+                <xs:element ref="multiplicity"/>
+                <xs:element ref="breakPoint" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="document">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="transition" maxOccurs="unbounded"/>
+                <xs:element ref="place" maxOccurs="unbounded" minOccurs="0"/>
+                <xs:element ref="arc" maxOccurs="unbounded" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!-- ===== RESTRICTIONS ===== -->
+    <xs:simpleType name="arc_type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="regular"/>
+            <xs:enumeration value="reset"/>
+            <xs:enumeration value="inhibitor"/>
+            <xs:enumeration value="read"/>
+            <xs:enumeration value="variable"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- ===== INNER ELEMENTS ===== -->
+    <xs:element name="id" type="xs:int"/>
+    <xs:element name="x" type="xs:int"/>
+    <xs:element name="y" type="xs:int"/>
+    <xs:element name="label" type="xs:string"/>
+    <xs:element name="tokens" type="xs:int"/>
+    <xs:element name="isStatic" type="xs:boolean"/>
+    <xs:element name="static" type="xs:boolean"/>
+    <xs:element name="type" type="xs:string"/>
+    <xs:element name="sourceId" type="xs:int"/>
+    <xs:element name="destinationId" type="xs:int"/>
+    <xs:element name="multiplicity" type="xs:int"/>
+    <xs:element name="breakPoint">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="x"/>
+                <xs:element ref="y"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
