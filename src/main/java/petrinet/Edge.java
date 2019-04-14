@@ -4,7 +4,6 @@ public abstract class Edge {
     private final Vertex from;
     private final Vertex to;
 
-
     public Edge(Vertex from, Vertex to) throws IllegalVertexException {
 
         if(from instanceof Place && to instanceof Transition) {

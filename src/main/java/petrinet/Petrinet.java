@@ -124,7 +124,7 @@ public class Petrinet {
         }
     }
 
-    private Place getPlaceById(long id) {
+    public Place getPlaceById(long id) {
         for (Place place : places) {
             if (place.getId() == id) {
                 return place;
@@ -134,7 +134,7 @@ public class Petrinet {
         return null;
     }
 
-    private Transition getTransitionById(long id) {
+    public Transition getTransitionById(long id) {
         for (Transition transition : transitions) {
             if (transition.getId() == id) {
                 return transition;
@@ -144,7 +144,7 @@ public class Petrinet {
         return null;
     }
 
-    private Vertex getVertexById(long id) {
+    public Vertex getVertexById(long id) {
         Place place = getPlaceById(id);
         if (place != null) {
             return place;
@@ -158,11 +158,11 @@ public class Petrinet {
         return null;
     }
 
-    private EdgeNormal getEdgeNormalBetweenVertex(Vertex from, Vertex to) {
+    public EdgeNormal getEdgeNormalBetweenVertex(Vertex from, Vertex to) {
         return (EdgeNormal) getEdgeBetweenVertex(from, to, 0);
     }
 
-    private EdgeReset getEdgeResetBetweenVertex(Vertex from, Vertex to) {
+    public EdgeReset getEdgeResetBetweenVertex(Vertex from, Vertex to) {
         return (EdgeReset) getEdgeBetweenVertex(from, to, 1);
     }
 
