@@ -64,7 +64,7 @@ public class Transition extends Vertex {
         }
     }
 
-    private boolean canLaunch() {
+    public boolean canLaunch() {
         for (Edge edge : this.inputEdges) {
 
             if (!edge.canTransfer()) {

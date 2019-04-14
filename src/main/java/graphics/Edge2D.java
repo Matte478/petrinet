@@ -2,12 +2,10 @@ package graphics;
 
 import petrinet.Edge;
 import petrinet.EdgeNormal;
-import petrinet.Place;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
 
 public class Edge2D extends Line2D.Float implements Drawable {
     private long id;
