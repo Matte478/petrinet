@@ -3,8 +3,8 @@ package petrinet;
 import java.util.Vector;
 
 public class Transition extends Vertex {
-    private Vector<Edge> inputEdges = new Vector<Edge>();
-    private Vector<EdgeNormal> outputEdges = new Vector<EdgeNormal>();
+    private Vector<Edge> inputEdges = new Vector<>();
+    private Vector<EdgeNormal> outputEdges = new Vector<>();
 
     public Transition(long id, String name) {
         super(id, name);
@@ -33,8 +33,8 @@ public class Transition extends Vertex {
 
     public void launch() {
         if(canLaunch()) {
-            Vector<Edge> normal = new Vector<Edge>();
-            Vector<Edge> reset = new Vector<Edge>();
+            Vector<Edge> normal = new Vector<>();
+            Vector<Edge> reset = new Vector<>();
 
             filterEdges(normal, reset, this.inputEdges);
 

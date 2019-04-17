@@ -27,6 +27,8 @@ public class Place2D extends Ellipse2D.Float implements Drawable {
         graphics.setColor(Color.BLACK);
         graphics.draw(this);
         graphics.drawString( String.valueOf(place.getToken()), this.x+15, this.y+25);
+        int offset = 20 - (this.place.getName().length())*3;
+        graphics.drawString( this.place.getName(), this.x + offset, this.y+55);
     }
 
     public long getId() {

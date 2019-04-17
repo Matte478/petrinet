@@ -8,27 +8,18 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 
 public class Edge2D extends Line2D.Float implements Drawable {
-    private long id;
-    private boolean reset;
     private Edge edge;
-    private Place2D place2D;
-    private Transition2D transition2D;
+    private boolean reset;
 
-    public Edge2D(long id, Edge edge, Place2D source, Transition2D destination, boolean reset) {
+    public Edge2D(Edge edge, Place2D source, Transition2D destination, boolean reset) {
         super(source.getXf()+20, source.getYf()+20, destination.getXf()+20, destination.getYf()+20);
-        this.id = id;
         this.edge = edge;
-        this.place2D = source;
-        this.transition2D = destination;
         this.reset = reset;
     }
 
-    public Edge2D(long id, Edge edge, Transition2D source, Place2D destination, boolean reset) {
+    public Edge2D(Edge edge, Transition2D source, Place2D destination, boolean reset) {
         super(source.getXf()+20, source.getYf()+20, destination.getXf()+20, destination.getYf()+20);
-        this.id = id;
         this.edge = edge;
-        this.place2D = destination;
-        this.transition2D = source;
         this.reset = reset;
     }
 
@@ -41,12 +32,9 @@ public class Edge2D extends Line2D.Float implements Drawable {
         float y = this.y1 < this.y2 ? this.y1 + distanceY / 2 : this.y2 + distanceY / 2;
 
 
-//        Polygon poly = new Polygon(new int[] { Math.round(this.x2-20),Math.round(this.x2-30),Math.round(this.x2-30) }, new int[] { Math.round(this.y2),Math.round(this.y2-10),Math.round(this.y2+10) }, 3);
-//        graphics.fill(poly);
-
         arrowHead(graphics);
 
-        if(edge instanceof EdgeNormal) {
+        if(!reset) {
             if(((EdgeNormal) edge).getWeight() > 1) {
                 graphics.drawString(String.valueOf(((EdgeNormal) edge).getWeight()), x + 3, y - 3);
             }
@@ -87,7 +75,7 @@ public class Edge2D extends Line2D.Float implements Drawable {
         graphics.setTransform(old_tx);
     }
 
-    public long getId() {
-        return id;
-    }
+//    public long getId() {
+//        return id;
+//    }
 }

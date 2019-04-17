@@ -3,8 +3,6 @@ package graphics;
 import petrinet.Transition;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 public class Transition2D extends Rectangle.Float implements Drawable {
 
@@ -32,6 +30,9 @@ public class Transition2D extends Rectangle.Float implements Drawable {
             graphics.draw(this);
         }
         graphics.setColor(Color.BLACK);
+
+        int offset = 20 - (this.transition.getName().length())*3;
+        graphics.drawString( this.transition.getName(), this.x + offset, this.y+55);
     }
 
 

@@ -31,6 +31,8 @@ public class Window {
     private void loadPetrinet() {
         try {
             InputStream resource = ClassLoader.getSystemResourceAsStream("insurance.xml");
+//            InputStream resource = ClassLoader.getSystemResourceAsStream("naskuskunazadanie.xml");
+//            InputStream resource = ClassLoader.getSystemResourceAsStream("ooptest.xml");
             JAXBContext context = JAXBContext.newInstance(Document.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
 

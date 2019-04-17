@@ -1,6 +1,8 @@
 package graphics;
 
-import generated.Transition;
+import petrinet.Edge;
+import petrinet.Place;
+import petrinet.Transition;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -11,29 +13,63 @@ public class PetrinetCanvas extends Canvas implements MouseListener {
     private Vector<Place2D> places;
     private Vector<Transition2D> transitions;
     private Vector<Edge2D> edges;
-//    private Vector<Drawable> drawables;
 
     public PetrinetCanvas() {
-        this.places = new Vector<Place2D>();
-        this.transitions = new Vector<Transition2D>();
-        this.edges = new Vector<Edge2D>();
+        this.places = new Vector<>();
+        this.transitions = new Vector<>();
+        this.edges = new Vector<>();
         this.addMouseListener(this);
     }
 
-//    public void setDrawables(Vector<Drawable> drawables) {
-//        this.drawables = drawables;
-//    }
 
-    public void addPlace(Place2D place) {
-        this.places.add(place);
+    public void addPlace(int x, int y, Place place) {
+        this.places.add(new Place2D(x, y, place));
     }
 
-    public void addTransition(Transition2D transition) {
-        this.transitions.add(transition);
+    public void addTransition(int x, int y, Transition transition) {
+        this.transitions.add(new Transition2D(x, y, transition));
     }
 
-    public void addEdge(Edge2D edge) {
-        this.edges.add(edge);
+    public void addEdge(Edge edge, long sourceId, long destinationId, boolean reset) {
+        Place2D place = getPlaceById(sourceId);
+        Transition2D transition = getTransitionById(destinationId);
+
+        if(place != null && transition != null) {
+            addEdge2D(edge, place, transition, reset);
+            return;
+        }
+
+        transition = getTransitionById(sourceId);
+        place = getPlaceById(destinationId);
+
+        addEdge2D(edge, transition, place, reset);
+    }
+
+    private void addEdge2D(Edge edge, Place2D source, Transition2D destination, boolean reset) {
+        this.edges.add(new Edge2D(edge, source, destination, reset));
+    }
+    private void addEdge2D(Edge edge, Transition2D source, Place2D destination, boolean reset) {
+        this.edges.add(new Edge2D(edge, source, destination, reset));
+    }
+
+    private Place2D getPlaceById(long id) {
+        for(Place2D place : this.places) {
+            if (place.getId() == id) {
+                return place;
+            }
+        }
+
+        return null;
+    }
+
+    private Transition2D getTransitionById(long id) {
+        for(Transition2D transition : this.transitions) {
+            if (transition.getId() == id) {
+                return transition;
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -50,23 +86,10 @@ public class PetrinetCanvas extends Canvas implements MouseListener {
         for (Transition2D transition : transitions) {
             transition.draw((Graphics2D) g);
         }
-
-//        for (Place2D place : places) {
-//            place.draw((Graphics2D) g);
-//        }
-//
-//        for (Transition2D transition : transitions) {
-//            transition.draw((Graphics2D) g);
-//        }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
 
@@ -76,6 +99,11 @@ public class PetrinetCanvas extends Canvas implements MouseListener {
             clickedTransition.launch();
             repaint();
         }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
     }
 
     @Override
