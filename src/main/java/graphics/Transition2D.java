@@ -3,8 +3,9 @@ package graphics;
 import petrinet.Transition;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 
-public class Transition2D extends Rectangle.Float implements Drawable {
+public class Transition2D extends Rectangle2D.Float implements Drawable {
 
     private Transition transition;
 
@@ -31,11 +32,25 @@ public class Transition2D extends Rectangle.Float implements Drawable {
         }
         graphics.setColor(Color.BLACK);
 
-        int offset = 20 - (this.transition.getName().length())*3;
-        graphics.drawString( this.transition.getName(), this.x + offset, this.y+55);
+        petrinetDrawName(graphics);
     }
 
+    private void petrinetDrawName(Graphics2D graphics) {
+        String name = this.transition.getName();
+        int offset = 20 - (name.length())*3;
+        int x = (int) this.x + offset;
+        int y = (int) this.y + 55;
 
+        FontMetrics fm = graphics.getFontMetrics();
+        Rectangle2D rect = fm.getStringBounds(this.transition.getName(), graphics);
+
+        graphics.setColor(new Color(255, 255, 255, 180));
+
+        graphics.fillRect(x,y - fm.getAscent(), (int) rect.getWidth(), (int) rect.getHeight());
+
+        graphics.setColor(Color.BLACK);
+        graphics.drawString( this.transition.getName(), this.x + offset, this.y+55);
+    }
 
     public float getXf() {
         return this.x;

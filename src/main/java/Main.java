@@ -1,23 +1,11 @@
-import generated.Document;
-import generated.GraphicsTransformer;
-import generated.PetrinetTransformer;
-import graphics.Drawable;
-import graphics.PetrinetCanvas;
 import graphics.Window;
-import petrinet.Petrinet;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import java.awt.*;
-import java.io.InputStream;
-import java.util.Vector;
 
 public class Main {
 
     public static void main(String[] args) {
         Window window = new Window();
-        window.launch();
+//        window.launch();
 
 //        try {
 //            InputStream resource = ClassLoader.getSystemResourceAsStream("insurance.xml");
