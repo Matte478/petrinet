@@ -24,6 +24,12 @@ public class Place2D extends Ellipse2D.Float implements Drawable {
     public long getId() {
         return place.getId();
     }
+    public String getName() {
+        return this.place.getName();
+    }
+    public int getToken() {
+        return this.place.getToken();
+    }
 
     public void draw(Graphics2D graphics) {
         graphics.setColor(Color.WHITE);
@@ -36,7 +42,7 @@ public class Place2D extends Ellipse2D.Float implements Drawable {
     }
 
     private void petrinetDrawName(Graphics2D graphics) {
-        String name = this.place.getName();
+        String name = getName();
 
         FontMetrics fm = graphics.getFontMetrics();
         Rectangle2D rect = fm.getStringBounds(this.place.getName(), graphics);

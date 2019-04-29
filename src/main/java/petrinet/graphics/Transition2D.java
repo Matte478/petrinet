@@ -29,6 +29,10 @@ public class Transition2D extends Rectangle2D.Float implements Drawable {
         return transition.getId();
     }
 
+    public String getName() {
+        return this.transition.getName();
+    }
+
     public void draw(Graphics2D graphics) {
         if(transition.canLaunch()) {
             graphics.setColor(new Color(153, 255, 153));

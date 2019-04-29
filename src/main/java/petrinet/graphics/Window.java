@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,28 +17,34 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import org.apache.commons.io.FilenameUtils;
 
 public class Window extends Frame implements ActionListener {
     private PetrinetCanvas canvas;
     private Petrinet petrinet;
-    private final String btnLabel;
+    private final String btnLoadLabel;
+    private final String btnExportLabel;
 
     public Window() {
         this.canvas = new PetrinetCanvas();
-        this.btnLabel = "Load petrinet";
+        this.btnLoadLabel = "Load petrinet";
+        this.btnExportLabel = "Export petrinet";
 
         createLayout();
         setCloseBtn();
     }
 
     private void createLayout() {
-        Button loadBtn = new Button(btnLabel);
+        Button loadBtn = new Button(btnLoadLabel);
+        Button exportBtn = new Button(btnExportLabel);
         loadBtn.addActionListener(this);
+        exportBtn.addActionListener(this);
         this.setBackground(Color.WHITE);
 
         this.setLayout(new BorderLayout());
         Panel panel = new Panel();
         panel.add(loadBtn);
+        panel.add(exportBtn);
         panel.setBackground(new Color(241, 244, 247) );
 
         this.add(panel, BorderLayout.NORTH);
@@ -56,20 +63,41 @@ public class Window extends Frame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         final JFileChooser fc = new JFileChooser();
-        fc.setDialogTitle(btnLabel);
+        fc.setDialogTitle(btnLoadLabel);
         fc.setCurrentDirectory(new java.io.File("."));
         fc.setFileFilter(createFileFilter());
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        if (e.getActionCommand().equals(btnLabel))
-        {
-            int returnValue = fc.showOpenDialog(this);
-            if (returnValue == JFileChooser.APPROVE_OPTION)
-            {
-                File file = fc.getSelectedFile();
-                String filename = file.getAbsolutePath();
 
-                loadPetrinet(filename);
+        if (e.getActionCommand().equals(btnLoadLabel)) {
+            clickedLoadBtn(fc);
+        }
+        else if (e.getActionCommand().equals(btnExportLabel)) {
+            clickedExportBtn(fc);
+        }
+    }
+
+    private void clickedLoadBtn(JFileChooser fc) {
+        int returnValue = fc.showOpenDialog(this);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            String filePame = file.getAbsolutePath();
+
+            loadPetrinet(filePame);
+        }
+    }
+
+    private void clickedExportBtn(JFileChooser fc) {
+        int returnValue = fc.showSaveDialog(this);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+
+            if ( ! FilenameUtils.getExtension(file.getName()).equalsIgnoreCase("xml")) {
+                file = new File(file.getParentFile(), FilenameUtils.getBaseName(file.getName()) + ".xml"); // remove the extension (if any) and replace it with ".xml"
             }
+
+            String filePath = file.getAbsolutePath();
+
+            exportPetrinet(filePath);
         }
     }
 
@@ -91,9 +119,9 @@ public class Window extends Frame implements ActionListener {
         };
     }
 
-    private void loadPetrinet(String filename) {
+    private void loadPetrinet(String filePath) {
         try {
-            File file = new File(filename);
+            File file = new File(filePath);
             JAXBContext context = JAXBContext.newInstance(Document.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
 
@@ -113,6 +141,21 @@ public class Window extends Frame implements ActionListener {
 
         } catch (JAXBException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void exportPetrinet(String filePath) {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(Document.class);
+            Marshaller marshaller = jaxbContext.createMarshaller();
+
+            GraphicsTransformer graphicsTransformer = new GraphicsTransformer(petrinet);
+
+            Document document = graphicsTransformer.transformToDocument(canvas.getPlaces(), canvas.getTransitions(), canvas.getEdges());
+
+            marshaller.marshal(document, new File(filePath));
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
         }
     }
 

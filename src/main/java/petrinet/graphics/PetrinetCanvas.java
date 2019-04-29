@@ -21,6 +21,18 @@ public class PetrinetCanvas extends Canvas implements MouseListener {
         this.addMouseListener(this);
     }
 
+    public Vector<Place2D> getPlaces() {
+        return places;
+    }
+
+    public Vector<Transition2D> getTransitions() {
+        return transitions;
+    }
+
+    public Vector<Edge2D> getEdges() {
+        return edges;
+    }
+
     public void addPlace(int x, int y, Place place) {
         this.places.add(new Place2D(x, y, place));
     }

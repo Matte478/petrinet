@@ -3,9 +3,9 @@ package petrinet.logic;
 import java.util.Vector;
 
 public class Petrinet {
-    private Vector<Place> places = new Vector<Place>();
-    private Vector<Transition> transitions = new Vector<Transition>();
-    private Vector<Edge> edges = new Vector<Edge>();
+    private Vector<Place> places = new Vector<>();
+    private Vector<Transition> transitions = new Vector<>();
+    private Vector<Edge> edges = new Vector<>();
 //    private long counterId = 0;
 
 

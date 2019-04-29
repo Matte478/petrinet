@@ -10,17 +10,43 @@ import java.awt.geom.Line2D;
 public class Edge2D extends Line2D.Float implements Drawable {
     private Edge edge;
     private boolean reset;
+    private long sourceId;
+    private long destinationId;
 
     public Edge2D(Edge edge, Place2D source, Transition2D destination, boolean reset) {
         super(source.getXf()+20, source.getYf()+20, destination.getXf()+20, destination.getYf()+20);
         this.edge = edge;
         this.reset = reset;
+        this.sourceId = source.getId();
+        this.destinationId = destination.getId();
     }
 
     public Edge2D(Edge edge, Transition2D source, Place2D destination, boolean reset) {
         super(source.getXf()+20, source.getYf()+20, destination.getXf()+20, destination.getYf()+20);
         this.edge = edge;
         this.reset = reset;
+        this.sourceId = source.getId();
+        this.destinationId = destination.getId();
+    }
+
+    public boolean isReset() {
+        return reset;
+    }
+
+    public long getSourceId() {
+        return sourceId;
+    }
+
+    public long getDestinationId() {
+        return destinationId;
+    }
+
+    public int getWeight() {
+        if (reset) {
+            return 1;
+        } else {
+            return ((EdgeNormal) this.edge).getWeight();
+        }
     }
 
     public void draw(Graphics2D graphics) {
