@@ -13,11 +13,25 @@ public class PetrinetCanvas extends Canvas implements MouseListener {
     private Vector<Place2D> places;
     private Vector<Transition2D> transitions;
     private Vector<Edge2D> edges;
+    private CustomAdder customAdder;
+
+//    private int Edge
+
+    public final int ADD_PLACE = 0;
+    public final int ADD_TRANSITION = 1;
+    public final int ADD_EDGE_NORMAL = 2;
+    public final int ADD_EDGE_RESET = 3;
+    public final int DELETE = 4;
+    public final int RUN = 5;
+    private int mode;
 
     public PetrinetCanvas() {
+        super();
         this.places = new Vector<>();
         this.transitions = new Vector<>();
         this.edges = new Vector<>();
+        this.customAdder = null;
+        this.mode = -1;
         this.addMouseListener(this);
     }
 
@@ -31,6 +45,30 @@ public class PetrinetCanvas extends Canvas implements MouseListener {
 
     public Vector<Edge2D> getEdges() {
         return edges;
+    }
+
+    public void setCustomAdder(CustomAdder ca) {
+        this.customAdder = ca;
+    }
+
+    public void setMode(int mode) {
+        switch (mode) {
+            case ADD_PLACE:
+            case ADD_TRANSITION:
+            case ADD_EDGE_NORMAL:
+            case ADD_EDGE_RESET:
+            case DELETE:
+            case RUN:
+                this.mode = mode;
+                break;
+            default:
+                this.mode = -1;
+                break;
+        }
+    }
+
+    public int getMode() {
+        return mode;
     }
 
     public void addPlace(int x, int y, Place place) {
@@ -143,12 +181,55 @@ public class PetrinetCanvas extends Canvas implements MouseListener {
         int x = e.getX();
         int y = e.getY();
 
-        Transition2D clickedTransition = clickedTransition(x,y);
-
-        if (clickedTransition != null) {
-            clickedTransition.launch();
-            repaint();
+        switch (mode) {
+            case ADD_PLACE:
+               modeAddPlace(x, y, e);
+                break;
+            case ADD_TRANSITION:
+                modeAddTransition(x, y);
+                break;
+            case ADD_EDGE_NORMAL:
+                modeAddEdge(x, y, false);
+                break;
+            case ADD_EDGE_RESET:
+                modeAddEdge(x, y, true);
+                break;
+            case RUN:
+                modeRun(x, y);
+                break;
         }
+        repaint();
+    }
+
+    private void modeAddPlace(int x, int y, MouseEvent e) {
+        Place2D p = clickedPlace(x, y);
+        if(p != null) {
+            if(e.getButton() == MouseEvent.BUTTON1) p.incrementToken();
+            else if (e.getButton() == MouseEvent.BUTTON3) p.decrementToken();
+        } else {
+            customAdder.addPlace(x - 20, y - 20);
+        }
+    }
+
+    private void modeAddTransition(int x, int y) {
+        customAdder.addTransition(x-20, y-20);
+    }
+
+    private void modeAddEdge(int x, int y, boolean reset) {
+        Place2D place = clickedPlace(x, y);
+        if (place != null) {
+            customAdder.addEdge(place.getId(), reset);
+            return;
+        }
+
+        Transition2D transition = clickedTransition(x, y);
+        if(transition != null) {
+            customAdder.addEdge(transition.getId(), reset);
+        }
+    }
+
+    private void modeRun(int x, int y) {
+        launchTransition(x, y);
     }
 
     @Override
@@ -166,10 +247,29 @@ public class PetrinetCanvas extends Canvas implements MouseListener {
 
     }
 
+    private void launchTransition(int x, int y) {
+        Transition2D clickedTransition = clickedTransition(x,y);
+
+        if (clickedTransition != null) {
+            clickedTransition.launch();
+            repaint();
+        }
+    }
+
     private Transition2D clickedTransition(int x, int y) {
         for (Transition2D transition : transitions) {
             if (transition.contains(x, y)) {
                 return transition;
+            }
+        }
+
+        return null;
+    }
+
+    private Place2D clickedPlace(int x, int y) {
+        for (Place2D place : places) {
+            if (place.contains(x, y)) {
+                return place;
             }
         }
 

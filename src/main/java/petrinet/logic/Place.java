@@ -20,6 +20,15 @@ public class Place extends Vertex {
         return token;
     }
 
+    public void incrementToken() {
+        this.token++;
+    }
+    public void decrementToken() {
+        if(this.token > 0) {
+            this.token--;
+        }
+    }
+
     @Override
     public String toString() {
         return "Place ID: " + this.getId() + ", name: " + this.getName() + ", token: " + this.getToken();

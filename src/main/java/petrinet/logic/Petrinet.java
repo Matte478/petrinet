@@ -6,10 +6,8 @@ public class Petrinet {
     private Vector<Place> places = new Vector<>();
     private Vector<Transition> transitions = new Vector<>();
     private Vector<Edge> edges = new Vector<>();
-//    private long counterId = 0;
 
-
-    public void addPlace(String name, int token, int id) {
+    public void addPlace(String name, int token, long id) {
         try {
             Place place = new Place(id, name, token);
             this.places.add(place);
@@ -18,7 +16,7 @@ public class Petrinet {
         }
     }
 
-    public void addTransition(String name, int id) {
+    public void addTransition(String name, long id) {
         try {
             Transition transition = new Transition(id, name);
             this.transitions.add(transition);
@@ -161,10 +159,21 @@ public class Petrinet {
     public EdgeNormal getEdgeNormalBetweenVertex(Vertex from, Vertex to) {
         return (EdgeNormal) getEdgeBetweenVertex(from, to, 0);
     }
+    public EdgeNormal getEdgeNormalBetweenVertex(long from, long to) {
+        Vertex source = getVertexById(from);
+        Vertex destination = getVertexById(to);
+        return (EdgeNormal) getEdgeBetweenVertex(source, destination, 0);
+    }
 
     public EdgeReset getEdgeResetBetweenVertex(Vertex from, Vertex to) {
         return (EdgeReset) getEdgeBetweenVertex(from, to, 1);
     }
+    public EdgeReset getEdgeResetBetweenVertex(long from, long to) {
+        Vertex source = getVertexById(from);
+        Vertex destination = getVertexById(to);
+        return (EdgeReset) getEdgeBetweenVertex(source, destination, 1);
+    }
+
 
     private Edge getEdgeBetweenVertex(Vertex from, Vertex to, int type) {
         for (Edge edge : edges) {

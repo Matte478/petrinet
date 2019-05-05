@@ -30,6 +30,12 @@ public class Place2D extends Ellipse2D.Float implements Drawable {
     public int getToken() {
         return this.place.getToken();
     }
+    public void incrementToken() {
+        this.place.incrementToken();
+    }
+    public void decrementToken() {
+        this.place.decrementToken();
+    }
 
     public void draw(Graphics2D graphics) {
         graphics.setColor(Color.WHITE);
@@ -56,5 +62,10 @@ public class Place2D extends Ellipse2D.Float implements Drawable {
 
         graphics.setColor(Color.BLACK);
         graphics.drawString( name, this.x + offset, this.y+55);
+    }
+
+    @Override
+    public boolean contains(double x, double y) {
+        return super.contains(x, y);
     }
 }

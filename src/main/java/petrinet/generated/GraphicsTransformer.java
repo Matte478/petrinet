@@ -9,7 +9,6 @@ import petrinet.logic.EdgeReset;
 import petrinet.logic.Petrinet;
 import petrinet.logic.Vertex;
 
-import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
