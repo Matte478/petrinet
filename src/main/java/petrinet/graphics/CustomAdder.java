@@ -59,4 +59,20 @@ public class CustomAdder {
         this.edgeDestinationid = -1;
     }
 
+    public void removePlace(long id) {
+        canvas.removePlace2D(id);
+        petrinet.removePlace(id);
+    }
+
+    public void removeTransition(long id) {
+        canvas.removeTransition2D(id);
+        petrinet.removeTransition(id);
+    }
+
+    public void removeEdge(Edge2D edge) {
+        Edge e = edge.getEdge();
+        canvas.removeEdge2D(edge);
+        petrinet.removeEdge(e);
+    }
+
 }

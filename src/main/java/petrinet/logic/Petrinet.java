@@ -85,6 +85,40 @@ public class Petrinet {
         }
     }
 
+    public void removePlace(long id) {
+        Place place = getPlaceById(id);
+        if(place != null) {
+            Vector<Edge> deleteEdges = new Vector<>();
+            for (Edge e : this.edges) {
+                if(e.getPlace() == place) {
+                    deleteEdges.add(e);
+                }
+            }
+            this.edges.removeAll(deleteEdges);
+            this.places.remove(place);
+        }
+    }
+
+    public void removeTransition(long id) {
+        Transition transition = getTransitionById(id);
+        if(transition != null) {
+            Vector<Edge> edges = transition.getInputEdges();
+            edges.addAll(transition.getOutputEdges());
+            Vector<Edge> deleteEdges = new Vector<>();
+            for (Edge e : edges) {
+                deleteEdges.add(e);
+            }
+            this.edges.removeAll(deleteEdges);
+            this.transitions.remove(transition);
+        }
+    }
+
+    public void removeEdge(Edge edge) {
+        edge.getTransition().getInputEdges().remove(edge);
+        edge.getTransition().getOutputEdges().remove(edge);
+        this.edges.remove(edge);
+    }
+
     public void launchTransition(long id) {
         Transition transition = getTransitionById(id);
 

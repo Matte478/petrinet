@@ -15,8 +15,6 @@ public class PetrinetCanvas extends Canvas implements MouseListener {
     private Vector<Edge2D> edges;
     private CustomAdder customAdder;
 
-//    private int Edge
-
     public final int ADD_PLACE = 0;
     public final int ADD_TRANSITION = 1;
     public final int ADD_EDGE_NORMAL = 2;
@@ -99,6 +97,38 @@ public class PetrinetCanvas extends Canvas implements MouseListener {
     }
     private void addEdge2D(Edge edge, Transition2D source, Place2D destination, boolean reset) {
         this.edges.add(new Edge2D(edge, source, destination, reset));
+    }
+
+    public void removePlace2D(long id) {
+        Place2D place = getPlaceById(id);
+        if(place != null) {
+            Vector<Edge2D> deleteEdges = new Vector<>();
+            for (Edge2D e : this.edges) {
+                if(e.getSourceId() == place.getId() || e.getDestinationId() == place.getId()) {
+                    deleteEdges.add(e);
+                }
+            }
+            this.edges.removeAll(deleteEdges);
+            this.places.remove(place);
+        }
+    }
+
+    public void removeTransition2D(long id) {
+        Transition2D transition = getTransitionById(id);
+        if(transition != null) {
+            Vector<Edge2D> deleteEdges = new Vector<>();
+            for (Edge2D edge : this.edges) {
+                if(edge.getDestinationId() == transition.getId() || edge.getSourceId() == transition.getId()) {
+                    deleteEdges.add(edge);
+                }
+            }
+            this.edges.removeAll(deleteEdges);
+            this.transitions.remove(transition);
+        }
+    }
+
+    public void removeEdge2D(Edge2D edge) {
+        this.edges.remove(edge);
     }
 
     private Place2D getPlaceById(long id) {
@@ -194,6 +224,9 @@ public class PetrinetCanvas extends Canvas implements MouseListener {
             case ADD_EDGE_RESET:
                 modeAddEdge(x, y, true);
                 break;
+            case DELETE:
+                modeDelete(x, y);
+                break;
             case RUN:
                 modeRun(x, y);
                 break;
@@ -225,6 +258,23 @@ public class PetrinetCanvas extends Canvas implements MouseListener {
         Transition2D transition = clickedTransition(x, y);
         if(transition != null) {
             customAdder.addEdge(transition.getId(), reset);
+        }
+    }
+
+    private void modeDelete(int x, int y) {
+        Edge2D edge = clickedEdge(x, y);
+        if(edge != null) {
+            customAdder.removeEdge(edge);
+        }
+        
+        Place2D place = clickedPlace(x, y);
+        if(place != null) {
+            customAdder.removePlace(place.getId());
+        } else {
+            Transition2D transition = clickedTransition(x, y);
+            if (transition != null) {
+                customAdder.removeTransition(transition.getId());
+            }
         }
     }
 
@@ -273,6 +323,21 @@ public class PetrinetCanvas extends Canvas implements MouseListener {
             }
         }
 
+        return null;
+    }
+
+    private Edge2D clickedEdge(int x, int y) {
+        int boxX = x - 10 / 2;
+        int boxY = y - 10 / 2;
+
+        int width = 10;
+        int height = 10;
+
+        for (Edge2D edge : edges) {
+            if (edge.intersects(boxX, boxY, width, height)) {
+                return edge;
+            }
+        }
         return null;
     }
 }

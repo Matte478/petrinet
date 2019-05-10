@@ -41,6 +41,10 @@ public class Edge2D extends Line2D.Float implements Drawable {
         return destinationId;
     }
 
+    public Edge getEdge() {
+        return edge;
+    }
+
     public int getWeight() {
         if (reset) {
             return 1;
