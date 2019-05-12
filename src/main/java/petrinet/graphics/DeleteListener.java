@@ -29,12 +29,12 @@ public class DeleteListener implements MouseListener {
         Place2D place = this.canvas.clickedPlace(x, y);
         Transition2D transition = this.canvas.clickedTransition(x, y);
 
-        if(edge != null) {
-            this.removeEdge(edge);
-        } else if(place != null) {
+        if(place != null) {
            this.removePlace(place.getId());
         } else if (transition != null) {
             this.removeTransition(transition.getId());
+        } else if(edge != null) {
+            this.removeEdge(edge);
         }
         this.canvas.repaint();
     }

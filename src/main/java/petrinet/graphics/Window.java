@@ -12,10 +12,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.util.Vector;
 
@@ -24,7 +21,7 @@ import org.apache.commons.io.FilenameUtils;
 public class Window extends Frame implements ActionListener {
     private PetrinetCanvas canvas;
     private Petrinet petrinet;
-    private Vector<Button> buttons;
+    private Vector<ModeButton> buttons;
     private final String btnLoadLabel;
     private final String btnExportLabel;
 
@@ -40,12 +37,20 @@ public class Window extends Frame implements ActionListener {
         setCloseBtn();
     }
 
+    public PetrinetCanvas getCanvas() {
+        return canvas;
+    }
+
+    public Petrinet getPetrinet() {
+        return petrinet;
+    }
+
     private void createLayout() {
         this.setBackground(Color.WHITE);
         this.setLayout(new BorderLayout());
         this.add(createControls(), BorderLayout.NORTH);
         this.add(this.canvas, BorderLayout.CENTER);
-        this.setSize(850, 500);
+        this.setSize(1000, 500);
         this.setVisible(true);
     }
 
@@ -55,35 +60,36 @@ public class Window extends Frame implements ActionListener {
 
         Button loadBtn = new Button(btnLoadLabel);
         loadBtn.addActionListener(this);
-        buttons.add(loadBtn);
+//        buttons.add(loadBtn);
         panel.add(loadBtn);
 
         Button exportBtn = new Button(btnExportLabel);
         exportBtn.addActionListener(this);
-        buttons.add(exportBtn);
+//        buttons.add(exportBtn);
         panel.add(exportBtn);
 
-        AddPlaceButton addPlaceButton = new AddPlaceButton(this.canvas, this.petrinet);
+//        AddPlaceButton addPlaceButton = new AddPlaceButton(this.canvas, this.petrinet);
+        AddPlaceButton addPlaceButton = new AddPlaceButton(this.canvas, this.petrinet, buttons);
         buttons.add(addPlaceButton);
         panel.add(addPlaceButton);
 
-        AddTransitionButton addTransitionButton = new AddTransitionButton(this.canvas, this.petrinet);
+        AddTransitionButton addTransitionButton = new AddTransitionButton(this.canvas, this.petrinet, buttons);
         buttons.add(addTransitionButton);
         panel.add(addTransitionButton);
 
-        AddEdgeNormalButton addEdgeNormalButton = new AddEdgeNormalButton(this.canvas, this.petrinet);
+        AddEdgeNormalButton addEdgeNormalButton = new AddEdgeNormalButton(this.canvas, this.petrinet, buttons);
         buttons.add(addEdgeNormalButton);
         panel.add(addEdgeNormalButton);
 
-        AddEdgeResetButton addEdgeResetButton = new AddEdgeResetButton(this.canvas, this.petrinet);
+        AddEdgeResetButton addEdgeResetButton = new AddEdgeResetButton(this.canvas, this.petrinet, buttons);
         buttons.add(addEdgeResetButton);
         panel.add(addEdgeResetButton);
 
-        DeleteButton deleteButton = new DeleteButton(this.canvas, this.petrinet);
+        DeleteButton deleteButton = new DeleteButton(this.canvas, this.petrinet, buttons);
         buttons.add(deleteButton);
         panel.add(deleteButton);
 
-        RunButton runButton = new RunButton(this.canvas, this.petrinet);
+        RunButton runButton = new RunButton(this.canvas, this.petrinet, buttons);
         buttons.add(runButton);
         panel.add(runButton);
 
@@ -117,11 +123,9 @@ public class Window extends Frame implements ActionListener {
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
         if (e.getActionCommand().equals(btnLoadLabel)) {
-            System.out.println("import");
             clickedLoadBtn(fc);
         }
         else if (e.getActionCommand().equals(btnExportLabel)) {
-            System.out.println("export");
             clickedExportBtn(fc);
         }
     }
@@ -134,6 +138,8 @@ public class Window extends Frame implements ActionListener {
 
             loadPetrinet(filePath);
         }
+
+
     }
 
     private void clickedExportBtn(JFileChooser fc) {
@@ -184,9 +190,14 @@ public class Window extends Frame implements ActionListener {
             GraphicsTransformer graphicsTransformer = new GraphicsTransformer(petrinet);
 
             this.remove(canvas); // if I want to open new petrinet
-            this.setSize(500, 200);
+            this.setSize(1000, 500);
             this.canvas = graphicsTransformer.transform(document);
-            System.out.println(petrinetTransformer.getMaxId());
+
+            for(ModeButton btn : this.buttons) {
+                btn.setCanvas(this.canvas);
+                btn.setPetrinet(this.petrinet);
+            }
+
             this.canvas.setBackground(Color.WHITE);
             this.add(canvas, BorderLayout.CENTER);
             setFrameSize();
@@ -224,6 +235,9 @@ public class Window extends Frame implements ActionListener {
 
         if(petrinetWidth > screenWidth) petrinetWidth = screenWidth;
         if(petrinetHeight > screenHeight) petrinetHeight = screenHeight;
+
+        if(petrinetWidth < 1000) petrinetWidth = 1000;
+        if(petrinetHeight < 500) petrinetHeight = 500;
 
         this.setSize(petrinetWidth, petrinetHeight);
     }

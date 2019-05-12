@@ -2,10 +2,12 @@ package petrinet.graphics;
 
 import petrinet.logic.Petrinet;
 
+import java.util.Vector;
+
 public class AddEdgeResetButton extends ModeButton {
 
-    public AddEdgeResetButton(PetrinetCanvas canvas, Petrinet petrinet) {
-        super("Add edge reset", canvas, petrinet);
+    public AddEdgeResetButton(PetrinetCanvas canvas, Petrinet petrinet, Vector<ModeButton> otherButtons) {
+        super("Add edge reset", canvas, petrinet, otherButtons);
     }
 
     @Override

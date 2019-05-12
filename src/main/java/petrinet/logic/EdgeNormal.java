@@ -25,6 +25,17 @@ public class EdgeNormal extends Edge {
         this.weight+=weight;
     }
 
+    public void decrementWeight(int weight) throws IllegalArgumentException {
+        if(weight < 1) {
+            throw new IllegalArgumentException("\nWeight must be > 0!\n");
+        }
+        if(this.weight - weight < 1) {
+            return;
+        }
+
+        this.weight-=weight;
+    }
+
     @Override
     public void transfer() {
         if (this.getFrom() instanceof Place && this.getTo() instanceof Transition) {

@@ -22,9 +22,7 @@ public class Petrinet {
     }
 
     public void setId(long id) {
-        System.out.println("id: " + id);
         this.id = id;
-        System.out.println("this.id: " + this.id);
     }
 
     public void incrementID() {

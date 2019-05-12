@@ -184,11 +184,11 @@ public class PetrinetCanvas extends Canvas {
     }
 
     public Edge2D clickedEdge(int x, int y) {
-        int boxX = x - 10 / 2;
-        int boxY = y - 10 / 2;
+        int boxX = x - 4;
+        int boxY = y - 4;
 
-        int width = 10;
-        int height = 10;
+        int width = 4;
+        int height = 4;
 
         for (Edge2D edge : edges) {
             if (edge.intersects(boxX, boxY, width, height)) {

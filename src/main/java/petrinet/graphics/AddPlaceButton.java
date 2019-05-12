@@ -2,10 +2,12 @@ package petrinet.graphics;
 
 import petrinet.logic.Petrinet;
 
+import java.util.Vector;
+
 public class AddPlaceButton extends ModeButton {
 
-    public AddPlaceButton(final PetrinetCanvas canvas, final Petrinet petrinet) {
-        super("Add place", canvas, petrinet);
+    public AddPlaceButton(final PetrinetCanvas canvas, final Petrinet petrinet, Vector<ModeButton> otherButtons) {
+        super("Add place", canvas, petrinet, otherButtons);
     }
 
     @Override

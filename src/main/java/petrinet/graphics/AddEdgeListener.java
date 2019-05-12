@@ -1,6 +1,7 @@
 package petrinet.graphics;
 
 import petrinet.logic.Edge;
+import petrinet.logic.EdgeNormal;
 import petrinet.logic.Petrinet;
 
 import java.awt.event.MouseEvent;
@@ -29,6 +30,11 @@ public class AddEdgeListener implements MouseListener {
     public void mousePressed(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
+
+        if(!reset && (this.canvas.clickedEdge(x, y) != null)) {
+            if(e.getButton() == MouseEvent.BUTTON1) ((EdgeNormal) canvas.clickedEdge(x, y).getEdge()).incrementWeight(1);
+            else if (e.getButton() == MouseEvent.BUTTON3) ((EdgeNormal) canvas.clickedEdge(x, y).getEdge()).decrementWeight(1);
+        }
 
         Place2D place = this.canvas.clickedPlace(x, y);
         if (place != null) {
@@ -65,16 +71,19 @@ public class AddEdgeListener implements MouseListener {
         } else if (edgeDestinationid < 0) {
             edgeDestinationid = id;
         }
+
         if(edgeSourceid >= 0 && edgeDestinationid >= 0) {
+            boolean exists = (petrinet.getEdgeNormalBetweenVertex(edgeSourceid, edgeDestinationid) != null) || (petrinet.getEdgeResetBetweenVertex(edgeSourceid, edgeDestinationid) != null);
             if (reset) petrinet.addEdgeReset(edgeSourceid, edgeDestinationid);
             else petrinet.addEdgeNormal(edgeSourceid, edgeDestinationid, 1);
 
             Edge edge = reset ? petrinet.getEdgeResetBetweenVertex(edgeSourceid, edgeDestinationid) : petrinet.getEdgeNormalBetweenVertex(edgeSourceid, edgeDestinationid);
-            if(edge != null) {
+            if(edge != null & !exists) {
                 canvas.addEdge(edge, edgeSourceid, edgeDestinationid, reset);
             }
             resetEdgeIds();
         }
+        this.canvas.repaint();
     }
 
     private void resetEdgeIds() {
