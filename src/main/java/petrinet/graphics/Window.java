@@ -32,7 +32,6 @@ public class Window extends Frame implements ActionListener {
     public Window() {
         this.petrinet = new Petrinet();
         this.canvas = new PetrinetCanvas();
-        this.canvas.setCustomAdder(new CustomAdder(petrinet, this.canvas));
         this.buttons = new Vector<>();
         this.btnLoadLabel = "Import petrinet";
         this.btnExportLabel = "Export petrinet";
@@ -187,10 +186,7 @@ public class Window extends Frame implements ActionListener {
             this.remove(canvas); // if I want to open new petrinet
             this.setSize(500, 200);
             this.canvas = graphicsTransformer.transform(document);
-            CustomAdder ca = new CustomAdder(petrinet, this.canvas);
             System.out.println(petrinetTransformer.getMaxId());
-//            ca.setId(petrinetTransformer.getMaxId());
-            this.canvas.setCustomAdder(ca);
             this.canvas.setBackground(Color.WHITE);
             this.add(canvas, BorderLayout.CENTER);
             setFrameSize();

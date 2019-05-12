@@ -23,7 +23,6 @@ public class AddPlaceListener implements MouseListener {
     public void mousePressed(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-
         Place2D p = this.canvas.clickedPlace(x, y);
         if(p != null) {
             if(e.getButton() == MouseEvent.BUTTON1) p.incrementToken();

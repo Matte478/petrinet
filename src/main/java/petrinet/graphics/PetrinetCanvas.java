@@ -5,31 +5,18 @@ import petrinet.logic.Place;
 import petrinet.logic.Transition;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Vector;
 
 public class PetrinetCanvas extends Canvas {
     private Vector<Place2D> places;
     private Vector<Transition2D> transitions;
     private Vector<Edge2D> edges;
-    public CustomAdder customAdder;
-
-    public final int ADD_PLACE = 0;
-    public final int ADD_TRANSITION = 1;
-    public final int ADD_EDGE_NORMAL = 2;
-    public final int ADD_EDGE_RESET = 3;
-    public final int DELETE = 4;
-    public final int RUN = 5;
-    private int mode;
 
     public PetrinetCanvas() {
         super();
         this.places = new Vector<>();
         this.transitions = new Vector<>();
         this.edges = new Vector<>();
-        this.customAdder = null;
-        this.mode = -1;
     }
 
     public Vector<Place2D> getPlaces() {
@@ -42,10 +29,6 @@ public class PetrinetCanvas extends Canvas {
 
     public Vector<Edge2D> getEdges() {
         return edges;
-    }
-
-    public void setCustomAdder(CustomAdder ca) {
-        this.customAdder = ca;
     }
 
     public void addPlace(int x, int y, Place place) {
