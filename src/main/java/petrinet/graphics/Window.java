@@ -27,12 +27,7 @@ public class Window extends Frame implements ActionListener {
     private Vector<Button> buttons;
     private final String btnLoadLabel;
     private final String btnExportLabel;
-    private final String btnAddPlaceLabel;
-    private final String btnAddTransitionLabel;
-    private final String btnAddEdgeNormalLabel;
-    private final String btnAddEdgeResetLabel;
-    private final String btnDeleteLabel;
-    private final String btnFireLabel;
+
 
     public Window() {
         this.petrinet = new Petrinet();
@@ -41,12 +36,6 @@ public class Window extends Frame implements ActionListener {
         this.buttons = new Vector<>();
         this.btnLoadLabel = "Import petrinet";
         this.btnExportLabel = "Export petrinet";
-        this.btnAddPlaceLabel = "Add place";
-        this.btnAddTransitionLabel = "Add transition";
-        this.btnAddEdgeNormalLabel = "Add edge";
-        this.btnAddEdgeResetLabel = "Add reset edge";
-        this.btnDeleteLabel = "Delete";
-        this.btnFireLabel = "Run";
 
         createLayout();
         setCloseBtn();
@@ -64,67 +53,45 @@ public class Window extends Frame implements ActionListener {
     private Panel createControls() {
         Panel panel = new Panel();
         panel.setBackground(new Color(241, 244, 247) );
-        final Button loadBtn = new Button(btnLoadLabel);
-        final Button exportBtn = new Button(btnExportLabel);
-        final Button addPlaceBtn = new Button(btnAddPlaceLabel);
-        final Button addTransitionBtn = new Button(btnAddTransitionLabel);
-        final Button addEdgeNormalBtn = new Button(btnAddEdgeNormalLabel);
-        final Button addEdgeResetBtn = new Button(btnAddEdgeResetLabel);
-        final Button deleteBtn = new Button(btnDeleteLabel);
-        final Button fireBtn = new Button(btnFireLabel);
-        buttons.add(loadBtn);
-        buttons.add(exportBtn);
-        buttons.add(addPlaceBtn);
-        buttons.add(addTransitionBtn);
-        buttons.add(addEdgeNormalBtn);
-        buttons.add(addEdgeResetBtn);
-        buttons.add(deleteBtn);
-        buttons.add(fireBtn);
 
+        Button loadBtn = new Button(btnLoadLabel);
         loadBtn.addActionListener(this);
-        exportBtn.addActionListener(this);
-        addPlaceBtn.addActionListener(
-            createActionListener(canvas.ADD_PLACE, addPlaceBtn)
-        );
-        addTransitionBtn.addActionListener(
-            createActionListener(canvas.ADD_TRANSITION, addTransitionBtn)
-        );
-        addEdgeNormalBtn.addActionListener(
-            createActionListener(canvas.ADD_EDGE_NORMAL, addEdgeNormalBtn)
-        );
-        addEdgeResetBtn.addActionListener(
-                createActionListener(canvas.ADD_EDGE_RESET, addEdgeResetBtn)
-        );
-        deleteBtn.addActionListener(
-            createActionListener(canvas.DELETE, deleteBtn)
-        );
-        fireBtn.addActionListener(
-            createActionListener(canvas.RUN, fireBtn)
-        );
-
+        buttons.add(loadBtn);
         panel.add(loadBtn);
+
+        Button exportBtn = new Button(btnExportLabel);
+        exportBtn.addActionListener(this);
+        buttons.add(exportBtn);
         panel.add(exportBtn);
-        panel.add(addPlaceBtn);
-        panel.add(addTransitionBtn);
-        panel.add(addEdgeNormalBtn);
-        panel.add(addEdgeResetBtn);
-        panel.add(deleteBtn);
-        panel.add(fireBtn);
+
+        AddPlaceButton addPlaceButton = new AddPlaceButton(this.canvas, this.petrinet);
+        buttons.add(addPlaceButton);
+        panel.add(addPlaceButton);
+
+        AddTransitionButton addTransitionButton = new AddTransitionButton(this.canvas, this.petrinet);
+        buttons.add(addTransitionButton);
+        panel.add(addTransitionButton);
+
+        AddEdgeNormalButton addEdgeNormalButton = new AddEdgeNormalButton(this.canvas, this.petrinet);
+        buttons.add(addEdgeNormalButton);
+        panel.add(addEdgeNormalButton);
+
+        AddEdgeResetButton addEdgeResetButton = new AddEdgeResetButton(this.canvas, this.petrinet);
+        buttons.add(addEdgeResetButton);
+        panel.add(addEdgeResetButton);
+
+        DeleteButton deleteButton = new DeleteButton(this.canvas, this.petrinet);
+        buttons.add(deleteButton);
+        panel.add(deleteButton);
+
+        RunButton runButton = new RunButton(this.canvas, this.petrinet);
+        buttons.add(runButton);
+        panel.add(runButton);
 
         return panel;
     }
 
-    private ActionListener createActionListener(final int mode, final Button btn) {
-        return new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                canvas.setMode(mode);
-                setActiveBtn(btn);
-            }
-        };
-    }
-
-    private void setActiveBtn(Button button) {
+    public void setActiveBtn(Button button) {
         for(Button btn : buttons) {
             if(btn == button) {
                 btn.setForeground(Color.BLUE);
@@ -151,9 +118,11 @@ public class Window extends Frame implements ActionListener {
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
         if (e.getActionCommand().equals(btnLoadLabel)) {
+            System.out.println("import");
             clickedLoadBtn(fc);
         }
         else if (e.getActionCommand().equals(btnExportLabel)) {
+            System.out.println("export");
             clickedExportBtn(fc);
         }
     }
@@ -162,9 +131,9 @@ public class Window extends Frame implements ActionListener {
         int returnValue = fc.showOpenDialog(this);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            String filePame = file.getAbsolutePath();
+            String filePath = file.getAbsolutePath();
 
-            loadPetrinet(filePame);
+            loadPetrinet(filePath);
         }
     }
 
@@ -211,6 +180,7 @@ public class Window extends Frame implements ActionListener {
 
             PetrinetTransformer petrinetTransformer = new PetrinetTransformer();
             petrinet = petrinetTransformer.transform(document);
+            petrinet.setId(petrinetTransformer.getMaxId());
 
             GraphicsTransformer graphicsTransformer = new GraphicsTransformer(petrinet);
 
@@ -219,7 +189,7 @@ public class Window extends Frame implements ActionListener {
             this.canvas = graphicsTransformer.transform(document);
             CustomAdder ca = new CustomAdder(petrinet, this.canvas);
             System.out.println(petrinetTransformer.getMaxId());
-            ca.setId(petrinetTransformer.getMaxId());
+//            ca.setId(petrinetTransformer.getMaxId());
             this.canvas.setCustomAdder(ca);
             this.canvas.setBackground(Color.WHITE);
             this.add(canvas, BorderLayout.CENTER);

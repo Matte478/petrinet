@@ -6,6 +6,7 @@ public class Petrinet {
     private Vector<Place> places = new Vector<>();
     private Vector<Transition> transitions = new Vector<>();
     private Vector<Edge> edges = new Vector<>();
+    private long id = 0;
 
     public void addPlace(String name, int token, long id) {
         try {
@@ -14,6 +15,20 @@ public class Petrinet {
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public long getID() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        System.out.println("id: " + id);
+        this.id = id;
+        System.out.println("this.id: " + this.id);
+    }
+
+    public void incrementID() {
+        this.id++;
     }
 
     public void addTransition(String name, long id) {
